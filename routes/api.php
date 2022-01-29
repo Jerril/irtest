@@ -21,10 +21,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // Fetch all customers
 Route::get('/customers', [CustomersController::class, 'index']);
-Route::post('/customers', [CustomersController::class, 'create']);
-Route::get('/customers/{id}', function($id) {
-    return "Give the customer details & its transactions";
-});
-Route::post('/customers/{id}/debit', function(Request $Request, $id){
-    return "this should debit the user & save the transaction details to";
-});
+
+// Create new customer
+Route::post('/customers', [CustomersController::class, 'store']);
+
+// Fetch customer details
+Route::get('/customers/{id}', [CustomersController::class, 'show']);
+
+// Charge a customer card
+Route::get('customers/debit/{id}', [CustomersController::class, 'debit']);

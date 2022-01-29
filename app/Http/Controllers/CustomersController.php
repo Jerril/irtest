@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use App\Http\Requests\CustomerRequest;
 
 class CustomersController extends Controller
 {
@@ -22,8 +23,6 @@ class CustomersController extends Controller
         // ])
         
         return response()->json(Customer::all());
-        // return Customer::all();
-        // return "get all customers";
     }
 
     /**
@@ -34,19 +33,6 @@ class CustomersController extends Controller
     public function create(Request $request)
     {
         // Get the form submission
-        $request->validate([
-            'name'=>'required',
-            'email'=>'required'
-        ]);
-
-        $newCustomer = Customer::create($request->all());
-        
-        return response()->json([
-            "data" => [
-                "name" => $newCustomer->name,
-                "email" => $newCustomer->email
-            ]
-        ]);
     }
 
     /**
@@ -59,13 +45,18 @@ class CustomersController extends Controller
     {
         //
         $request->validate([
-            'name' => 'required',
-            'email' => 'required',
+            'name'=>'required',
+            'email'=>'required'
         ]);
 
-        Customer::create($request->all());
-
-
+        $customer = Customer::create($request->all());
+        
+        return response()->json([
+            "data" => [
+                "name" => $customer->name,
+                "email" => $customer->email
+            ]
+        ]);
     }
 
     /**
@@ -74,9 +65,18 @@ class CustomersController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function show(Customer $customer)
+    public function show(Customer $customer, $id)
     {
         //
+        $customer = Customer::FindOrFail($id);
+
+        return response()->json([
+            'data' => [
+                "name" => $customer->name,
+                "email" => $customer->email,
+                "transactions" => []
+            ]
+        ]);
     }
 
     /**
@@ -111,5 +111,16 @@ class CustomersController extends Controller
     public function destroy(Customer $customer)
     {
         //
+    }
+
+     /**
+     * Charge/debit card
+     *
+     * @param  \App\Models\Customer  $customer
+     * @return \Illuminate\Http\Response
+     */
+    public function debit(CustomerRequest $customer, $id)
+    {
+        // Debit customers card using the card details(request) & save the transaction details in transactions table
     }
 }
