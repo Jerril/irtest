@@ -29,4 +29,4 @@ Route::post('/customers', [CustomersController::class, 'store']);
 Route::get('/customers/{id}', [CustomersController::class, 'show']);
 
 // Charge a customer card
-Route::get('customers/debit/{id}', [CustomersController::class, 'debit']);
+Route::post('customers/{id}/debit', [CustomersController::class, 'charge']);
